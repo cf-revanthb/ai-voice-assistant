@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle AI Voice Agent</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <i class="fas fa-circle"></i>
+                Circle AI Voice Agent
+            </h1>
+            <p class="subtitle">Say "Hey Circle" to start a conversation</p>
+        </header>
+
+        <main class="main">
+            <div class="voice-interface">
+                <div class="circle-container">
+                    <div class="voice-circle" id="voiceCircle">
+                        <div class="circle-inner">
+                            <i class="fas fa-microphone" id="micIcon"></i>
+                        </div>
+                        <div class="pulse-ring" id="pulseRing"></div>
+                        <div class="wave-ring" id="waveRing"></div>
+                    </div>
+                </div>
+
+                <div class="status-display">
+                    <div class="status-text" id="statusText">Ready to listen</div>
+                    <div class="wake-word-indicator" id="wakeWordIndicator">
+                        <span class="wake-text">HEY CIRCLE</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" id="startBtn">
+                        <i class="fas fa-play"></i>
+                        Start Listening
+                    </button>
+                    <button class="control-btn" id="stopBtn" disabled>
+                        <i class="fas fa-stop"></i>
+                        Stop
+                    </button>
+                    <button class="control-btn" id="settingsBtn">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </button>
+                </div>
+            </div>
+
+            <div class="conversation-panel">
+                <div class="conversation-header">
+                    <h3>Conversation</h3>
+                    <div class="header-controls">
+                        <button class="clear-btn" id="clearBtn">
+                            <i class="fas fa-trash"></i>
+                            Clear
+                        </button>
+                        <button class="analyze-btn" id="analyzeBtn">
+                            <i class="fas fa-video"></i>
+                            Analyze Recordings
+                        </button>
+                    </div>
+                </div>
+                <div class="messages" id="messages"></div>
+            </div>
+        </main>
+
+        <div class="settings-modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button class="close-btn" id="closeSettings">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label for="sambanovaApiKey">SambaNova API Key:</label>
+                        <input type="password" id="sambanovaApiKey" placeholder="Enter your SambaNova API key">
+                    </div>
+                    <div class="setting-group">
+                        <label for="humeApiKey">Hume AI API Key:</label>
+                        <input type="password" id="humeApiKey" placeholder="Enter your Hume AI API key">
+                    </div>
+                    <div class="setting-group">
+                        <label for="modelSelect">Model:</label>
+                        <select id="modelSelect">
+                            <option value="llama-4-maverick-17b-128e-instruct">Llama-4-Maverick-17B-128E-Instruct</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="voiceSelect">Voice:</label>
+                        <select id="voiceSelect">
+                            <option value="default">Default</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="save-btn" id="saveSettings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-modal" id="analysisModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Meeting Recording Analysis</h3>
+                    <button class="close-btn" id="closeAnalysis">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-section">
+                        <h4>Upload Meeting Recording</h4>
+                        <div class="file-upload">
+                            <input type="file" id="recordingUpload" accept=".mp4,.webm,.wav,.mp3" multiple>
+                            <label for="recordingUpload" class="upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Choose Files or Drag & Drop
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="recordings-list" id="recordingsList">
+                        <h4>Available Recordings</h4>
+                        <div class="recordings-grid" id="recordingsGrid">
+                            <!-- Recordings will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-results" id="analysisResults">
+                        <h4>Analysis Results</h4>
+                        <div class="results-content" id="resultsContent">
+                            <!-- Analysis results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="analyze-all-btn" id="analyzeAllBtn">
+                        <i class="fas fa-brain"></i>
+                        Analyze All Recordings
+                    </button>
+                    <button class="refresh-btn" id="refreshBtn">
+                        <i class="fas fa-refresh"></i>
+                        Refresh List
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@humeai/voice-embed@latest/dist/hume-voice-embed.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

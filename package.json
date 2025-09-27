@@ -1,0 +1,63 @@
+{
+  "name": "circle-ai-voice-agent",
+  "version": "1.0.0",
+  "description": "A React-based AI voice agent with Siri/Alexa-like interface and SambaNova integration",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "framer-motion": "^10.16.4",
+    "lottie-react": "^2.4.0",
+    "axios": "^1.5.0",
+    "react-router-dom": "^6.15.0",
+    "styled-components": "^6.0.7",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "react-dropzone": "^14.2.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start",
+    "serve": "serve -s build -l 3000"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "keywords": [
+    "react",
+    "ai",
+    "voice-agent",
+    "siri",
+    "alexa",
+    "speech-recognition",
+    "text-to-speech",
+    "sambanova",
+    "llama",
+    "wake-word-detection",
+    "hume-ai"
+  ],
+  "author": "Circle AI Voice Agent",
+  "license": "MIT"
+}
