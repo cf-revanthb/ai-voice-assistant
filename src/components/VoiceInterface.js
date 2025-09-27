@@ -38,17 +38,18 @@ const VoiceInterface = ({
     }
   }, [isListening, isProcessing, isSpeaking, wakeWordDetected, isAlwaysListening]);
 
-  useEffect(() => {
-    let interval;
-    if (isListening || isSpeaking) {
-      interval = setInterval(() => {
-        setAudioLevel(Math.random() * 100);
-      }, 100);
-    } else {
-      setAudioLevel(0);
-    }
-    return () => clearInterval(interval);
-  }, [isListening, isSpeaking]);
+  // Audio level effect for future visual feedback
+  // useEffect(() => {
+  //   let interval;
+  //   if (isListening || isSpeaking) {
+  //     interval = setInterval(() => {
+  //       setAudioLevel(Math.random() * 100);
+  //     }, 100);
+  //   } else {
+  //     setAudioLevel(0);
+  //   }
+  //   return () => clearInterval(interval);
+  // }, [isListening, isSpeaking]);
 
   const getCircleState = () => {
     if (wakeWordDetected) return 'wake-detected';

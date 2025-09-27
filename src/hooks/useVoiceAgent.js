@@ -110,7 +110,7 @@ export const useVoiceAgent = (settings) => {
         synthesisRef.current.cancel();
       }
     };
-  }, [wakeWordDetected, wakeWords, isAlwaysListening, isSpeaking, processUserInput, startContinuousListening, stopListening]);
+  }, [wakeWordDetected, wakeWords, isAlwaysListening]);
 
   const startContinuousListening = useCallback(() => {
     if (!recognitionRef.current || isListening || isSpeaking) return;
@@ -180,7 +180,7 @@ export const useVoiceAgent = (settings) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [isProcessing, settings, speak]);
+  }, [isProcessing, settings]);
 
   const speak = useCallback(async (text, userInput = '') => {
     if (isSpeaking) return;
