@@ -5,6 +5,86 @@ class HumeService {
     this.retryDelay = 1000;
   }
 
+  // Get access token for client-side requests
+  async getAccessToken(apiKey, secretKey) {
+    try {
+      const credentials = btoa(`${apiKey}:${secretKey}`);
+      const response = await fetch('https://api.hume.ai/oauth2-cc/token', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${credentials}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Token request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.access_token;
+    } catch (error) {
+      console.error('Error getting access token:', error);
+      throw error;
+    }
+  }
+
+  // Text-to-Speech using Hume AI
+  async synthesizeSpeech(text, voiceId = 'default', apiKey) {
+    try {
+      const response = await fetch(`${this.baseUrl}/tts/generations`, {
+        method: 'POST',
+        headers: {
+          'X-Hume-Api-Key': apiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          text: text,
+          voice_id: voiceId,
+          encoding: 'pcm_s16le',
+          sample_rate: 16000
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`TTS request failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      return audioBlob;
+    } catch (error) {
+      console.error('Error synthesizing speech:', error);
+      throw error;
+    }
+  }
+
+  // Speech-to-Speech using EVI
+  async processSpeechToSpeech(audioBlob, apiKey) {
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob);
+
+      const response = await fetch(`${this.baseUrl}/evi/process`, {
+        method: 'POST',
+        headers: {
+          'X-Hume-Api-Key': apiKey
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`EVI request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error processing speech-to-speech:', error);
+      throw error;
+    }
+  }
+
   async analyzeRecording(recording) {
     // Simulate Hume AI analysis
     // In a real implementation, this would upload the file to Hume AI API
@@ -54,14 +134,28 @@ class HumeService {
 
   async testConnection(apiKey) {
     try {
-      // In a real implementation, this would test the Hume AI API connection
-      // For now, simulate a successful connection
       if (!apiKey) {
-        throw new Error('API key is required');
+        throw new Error('Hume AI API key is required');
       }
-      return { success: true, message: 'Hume AI connection successful' };
+
+      // Test TTS endpoint
+      const response = await fetch(`${this.baseUrl}/tts/voices`, {
+        method: 'GET',
+        headers: {
+          'X-Hume-Api-Key': apiKey,
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        return { success: true, message: 'Hume AI connection successful - TTS and EVI available' };
+      } else if (response.status === 401) {
+        return { success: false, message: 'Invalid Hume AI API key' };
+      } else {
+        return { success: false, message: `Hume AI connection failed: ${response.status}` };
+      }
     } catch (error) {
-      return { success: false, message: `Hume AI connection failed: ${error.message}` };
+      return { success: false, message: `Hume AI connection error: ${error.message}` };
     }
   }
 

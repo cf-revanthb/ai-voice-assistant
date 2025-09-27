@@ -187,14 +187,36 @@ const SettingsModal = ({ settings, onUpdateSettings, onClose }) => {
 
                 <div className="form-group">
                   <label htmlFor="humeApiKey">
-                    Hume AI API Key (Optional)
+                    Hume AI API Key
+                    <a 
+                      href="https://dev.hume.ai/docs/introduction/api-key" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="help-link"
+                      title="Get your Hume AI API key"
+                    >
+                      <i className="fas fa-external-link-alt"></i>
+                    </a>
                   </label>
                   <input
                     type="password"
                     id="humeApiKey"
                     value={formData.humeApiKey}
                     onChange={(e) => handleInputChange('humeApiKey', e.target.value)}
-                    placeholder="Enter your Hume AI API key for emotion analysis"
+                    placeholder="Enter your Hume AI API key for TTS and emotion analysis"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="humeSecretKey">
+                    Hume AI Secret Key
+                  </label>
+                  <input
+                    type="password"
+                    id="humeSecretKey"
+                    value={formData.humeSecretKey}
+                    onChange={(e) => handleInputChange('humeSecretKey', e.target.value)}
+                    placeholder="Enter your Hume AI secret key for token authentication"
                   />
                 </div>
               </div>
@@ -255,6 +277,24 @@ const SettingsModal = ({ settings, onUpdateSettings, onClose }) => {
                     <small>
                       <i className="fas fa-info-circle"></i>
                       The system will automatically select the best natural-sounding voice for human-like speech.
+                    </small>
+                  </div>
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.useHumeTTS}
+                      onChange={(e) => handleInputChange('useHumeTTS', e.target.checked)}
+                    />
+                    <span className="checkmark"></span>
+                    Use Hume AI Text-to-Speech
+                  </label>
+                  <div className="checkbox-info">
+                    <small>
+                      <i className="fas fa-info-circle"></i>
+                      Enable Hume AI's advanced TTS for more natural and emotional speech synthesis. Requires Hume AI API key.
                     </small>
                   </div>
                 </div>

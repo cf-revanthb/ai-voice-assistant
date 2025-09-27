@@ -1,3 +1,5 @@
+import { humeService } from './humeService';
+
 class VoiceService {
   constructor() {
     this.synthesis = window.speechSynthesis;
@@ -6,6 +8,7 @@ class VoiceService {
     this.isSpeaking = false;
     this.voiceQueue = [];
     this.isProcessingQueue = false;
+    this.humeService = humeService;
     
     this.loadVoices();
     this.setupVoiceEvents();
@@ -277,6 +280,41 @@ class VoiceService {
       // Start speaking
       this.synthesis.speak(utterance);
     });
+  }
+
+  async speakWithHumeAI(text, options, resolve, reject) {
+    try {
+      this.isSpeaking = true;
+      if (options.onStart) options.onStart();
+
+      const audioBlob = await this.humeService.synthesizeSpeech(
+        text, 
+        options.voiceId || 'default', 
+        options.humeApiKey
+      );
+
+      // Create audio element and play
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(audioBlob);
+      
+      audio.onended = () => {
+        this.isSpeaking = false;
+        if (options.onEnd) options.onEnd();
+        URL.revokeObjectURL(audio.src);
+        resolve();
+      };
+
+      audio.onerror = (error) => {
+        this.isSpeaking = false;
+        console.error('Hume AI audio playback error:', error);
+        reject(new Error('Audio playback failed'));
+      };
+
+      await audio.play();
+    } catch (error) {
+      this.isSpeaking = false;
+      reject(error);
+    }
   }
 
   addNaturalPatterns(utterance, context) {

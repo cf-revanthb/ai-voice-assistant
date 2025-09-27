@@ -4,13 +4,15 @@ export const useSettings = () => {
   const [settings, setSettings] = useState({
     sambanovaApiKey: '',
     humeApiKey: '',
+    humeSecretKey: '',
     model: 'llama-4-maverick-17b-128e-instruct',
     voice: 'default',
     language: 'en-US',
     wakeWordSensitivity: 0.8,
     autoStartListening: false,
     conversationMemory: true,
-    emotionAnalysis: true
+    emotionAnalysis: true,
+    useHumeTTS: true
   });
 
   // Load settings from localStorage on mount
@@ -45,13 +47,15 @@ export const useSettings = () => {
     setSettings({
       sambanovaApiKey: '',
       humeApiKey: '',
+      humeSecretKey: '',
       model: 'llama-4-maverick-17b-128e-instruct',
       voice: 'default',
       language: 'en-US',
       wakeWordSensitivity: 0.8,
       autoStartListening: false,
       conversationMemory: true,
-      emotionAnalysis: true
+      emotionAnalysis: true,
+      useHumeTTS: true
     });
   };
 

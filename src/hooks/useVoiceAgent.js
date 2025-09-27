@@ -34,9 +34,12 @@ export const useVoiceAgent = (settings) => {
       
       const fullTranscript = (finalTranscript + interimTranscript).trim();
       
+      console.log('Speech result:', { fullTranscript, finalTranscript, wakeWordDetected, isWakeWordListening: isWakeWordListeningRef.current });
+      
       // Check for wake word if we're in wake word listening mode
       if (isWakeWordListeningRef.current && !wakeWordDetected) {
         if (checkForWakeWord(fullTranscript)) {
+          console.log('Wake word detected!', fullTranscript);
           setWakeWordDetected(true);
           isWakeWordListeningRef.current = false;
           return;
@@ -45,6 +48,7 @@ export const useVoiceAgent = (settings) => {
       
       // Process the user's request after wake word is detected
       if (wakeWordDetected && finalTranscript) {
+        console.log('Processing user input after wake word:', finalTranscript);
         processUserInput(finalTranscript.trim());
         stopListening();
       }
@@ -110,6 +114,7 @@ export const useVoiceAgent = (settings) => {
         synthesisRef.current.cancel();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wakeWordDetected, wakeWords, isAlwaysListening]);
 
   const startContinuousListening = useCallback(() => {
@@ -148,8 +153,18 @@ export const useVoiceAgent = (settings) => {
     setMessages(prev => [...prev, userMessage]);
     
     try {
+      // Check if API key is configured
+      if (!settings.sambanovaApiKey || settings.sambanovaApiKey.trim() === '') {
+        throw new Error('SambaNova API key not configured. Please add your API key in settings.');
+      }
+
+      console.log('Processing user input:', userInput);
+      console.log('Using API key:', settings.sambanovaApiKey ? 'Configured' : 'Not configured');
+      
       // Get response from SambaNova API
       const response = await sambanovaService.getResponse(userInput, settings);
+      
+      console.log('Received response from SambaNova:', response);
       
       // Add assistant response to conversation
       const assistantMessage = {
@@ -161,12 +176,26 @@ export const useVoiceAgent = (settings) => {
       
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Speak the response with natural voice
-      speak(response, userInput);
+      // Speak the response with natural voice (try Hume AI TTS if available)
+      speak(response, userInput, {
+        useHumeTTS: settings.useHumeTTS,
+        humeApiKey: settings.humeApiKey,
+        voiceId: settings.voice
+      });
       
     } catch (error) {
       console.error('Error processing request:', error);
-      const errorMessage = 'Sorry, I encountered an error processing your request.';
+      
+      let errorMessage = 'Sorry, I encountered an error processing your request.';
+      
+      // Provide specific error messages for common issues
+      if (error.message.includes('API key')) {
+        errorMessage = 'Please configure your SambaNova API key in the settings to use Circle.';
+      } else if (error.message.includes('Rate limit')) {
+        errorMessage = 'I\'m getting too many requests. Please wait a moment and try again.';
+      } else if (error.message.includes('Network')) {
+        errorMessage = 'I\'m having trouble connecting to the internet. Please check your connection.';
+      }
       
       const errorMsg = {
         id: Date.now() + 1,
@@ -176,10 +205,15 @@ export const useVoiceAgent = (settings) => {
       };
       
       setMessages(prev => [...prev, errorMsg]);
-      speak(errorMessage, userInput);
+      speak(errorMessage, userInput, {
+        useHumeTTS: settings.useHumeTTS,
+        humeApiKey: settings.humeApiKey,
+        voiceId: settings.voice
+      });
     } finally {
       setIsProcessing(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isProcessing, settings]);
 
   const speak = useCallback(async (text, userInput = '') => {
