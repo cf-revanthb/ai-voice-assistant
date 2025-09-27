@@ -1,20 +1,21 @@
 {
-  "name": "circle-ai-voice-agent",
+  "name": "the-balm-voice-agent",
   "version": "1.0.0",
   "description": "A React-based AI voice agent with Siri/Alexa-like interface and SambaNova integration",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "framer-motion": "^10.16.4",
-    "lottie-react": "^2.4.0",
-    "axios": "^1.5.0",
-    "react-router-dom": "^6.15.0",
-    "styled-components": "^6.0.7",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "react-dropzone": "^14.2.3"
+    "axios": "^1.5.0",
+    "dotenv": "^17.2.2",
+    "framer-motion": "^10.16.4",
+    "lottie-react": "^2.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-router-dom": "^6.15.0",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.0.7"
   },
   "scripts": {
     "start": "react-scripts start",

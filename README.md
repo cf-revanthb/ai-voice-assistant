@@ -1,13 +1,13 @@
-# 🎤 Circle AI Voice Agent - React Edition
+# 🎤 The Balm Voice Agent - React Edition
 
-A modern, interactive React-based AI voice agent with a Siri/Alexa-like interface, powered by SambaNova's Llama-4-Maverick model and enhanced with Hume AI emotion analysis.
+A modern, interactive React-based AI voice agent with a Siri/Alexa-like interface, powered by SambaNova's Llama models and enhanced with Hume AI emotion analysis.
 
-![Circle AI Voice Agent](https://img.shields.io/badge/React-18.2.0-blue) ![SambaNova](https://img.shields.io/badge/SambaNova-Llama--4--Maverick-green) ![Hume AI](https://img.shields.io/badge/Hume%20AI-Emotion%20Analysis-purple)
+![The Balm Voice Agent](https://img.shields.io/badge/React-18.2.0-blue) ![SambaNova](https://img.shields.io/badge/SambaNova-Llama--3.1--8B-green) ![Hume AI](https://img.shields.io/badge/Hume%20AI-Emotion%20Analysis-purple)
 
 ## ✨ Features
 
 ### 🎯 **Core Voice Features**
-- **Wake Word Detection**: Responds to "Hey Circle", "Hi Circle", or "Hello Circle"
+- **Continuous Recording**: Click "Start Recording" to begin continuous voice interaction
 - **Real-time Speech Recognition**: Continuous listening with Web Speech API
 - **Natural Text-to-Speech**: High-quality voice responses
 - **Conversation Memory**: Persistent chat history with timestamps

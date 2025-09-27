@@ -15,7 +15,7 @@ class SambaNovaService {
       messages: [
         {
           role: 'system',
-          content: `You are Circle, a helpful AI voice assistant. Provide clear, concise, and friendly responses. Keep responses under 200 words for better voice interaction. Be conversational and engaging.`
+          content: `You are The Balm, a helpful AI voice assistant. Provide clear, concise, and friendly responses. Keep responses under 200 words for better voice interaction. Be conversational and engaging.`
         },
         {
           role: 'user',
@@ -80,7 +80,7 @@ class SambaNovaService {
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-4-maverick-17b-128e-instruct',
+          model: 'meta-llama/Llama-3.1-8B-Instruct',
           messages: [
             {
               role: 'user',
@@ -104,9 +104,24 @@ class SambaNovaService {
   getAvailableModels() {
     return [
       {
-        id: 'llama-4-maverick-17b-128e-instruct',
-        name: 'Llama-4-Maverick-17B-128E-Instruct',
-        description: 'Latest Llama model with enhanced instruction following'
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        description: 'Meta Llama 3.1 8B model with instruction following'
+      },
+      {
+        id: 'meta-llama/Llama-3.1-70B-Instruct',
+        name: 'Llama-3.1-70B-Instruct', 
+        description: 'Meta Llama 3.1 70B model with enhanced capabilities'
+      },
+      {
+        id: 'meta-llama/Llama-2-7b-chat-hf',
+        name: 'Llama-2-7B-Chat',
+        description: 'Meta Llama 2 7B chat model'
+      },
+      {
+        id: 'meta-llama/Llama-2-13b-chat-hf',
+        name: 'Llama-2-13B-Chat',
+        description: 'Meta Llama 2 13B chat model'
       }
     ];
   }

@@ -7,6 +7,7 @@ import AnalysisModal from './components/AnalysisModal';
 import Header from './components/Header';
 import { useVoiceAgent } from './hooks/useVoiceAgent';
 import { useSettings } from './hooks/useSettings';
+import { debugEnvironmentVariables } from './utils/debugEnv';
 import './App.css';
 
 function App() {
@@ -30,6 +31,9 @@ function App() {
   } = useVoiceAgent(settings);
 
   useEffect(() => {
+    // Debug environment variables
+    debugEnvironmentVariables();
+    
     // Simulate initial loading
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -54,7 +58,7 @@ function App() {
           >
             <i className="fas fa-circle"></i>
           </motion.div>
-          <h1 className="loading-title">Circle AI Voice Agent</h1>
+          <h1 className="loading-title">The Balm Voice Agent</h1>
           <p className="loading-subtitle">Initializing your personal AI assistant...</p>
         </motion.div>
       </div>

@@ -21,22 +21,20 @@ const VoiceInterface = ({
   const [statusText, setStatusText] = useState('Ready to listen');
 
   useEffect(() => {
-    if (wakeWordDetected) {
-      setStatusText('Wake word detected! Speak your request...');
-    } else if (isListening && isAlwaysListening) {
-      setStatusText('Always listening for "Hey Circle"...');
+    if (isListening && isAlwaysListening) {
+      setStatusText('Recording continuously... Speak naturally');
     } else if (isListening) {
-      setStatusText('Listening for "Hey Circle"...');
+      setStatusText('Recording... Speak naturally');
     } else if (isProcessing) {
       setStatusText('Processing your request...');
     } else if (isSpeaking) {
       setStatusText('Speaking response...');
     } else if (isAlwaysListening) {
-      setStatusText('Always listening mode - say "Hey Circle"');
+      setStatusText('Continuous recording mode - click to start');
     } else {
-      setStatusText('Click to start listening');
+      setStatusText('Click to start recording');
     }
-  }, [isListening, isProcessing, isSpeaking, wakeWordDetected, isAlwaysListening]);
+  }, [isListening, isProcessing, isSpeaking, isAlwaysListening]);
 
   // Audio level effect for future visual feedback
   // useEffect(() => {
@@ -52,7 +50,6 @@ const VoiceInterface = ({
   // }, [isListening, isSpeaking]);
 
   const getCircleState = () => {
-    if (wakeWordDetected) return 'wake-detected';
     if (isListening && isAlwaysListening) return 'always-listening';
     if (isListening) return 'listening';
     if (isProcessing) return 'processing';
@@ -206,7 +203,7 @@ const VoiceInterface = ({
             whileTap={{ scale: 0.95 }}
           >
             <i className="fas fa-play"></i>
-            <span>Start Listening</span>
+            <span>Start Recording</span>
           </motion.button>
           
           <motion.button
@@ -217,7 +214,7 @@ const VoiceInterface = ({
             whileTap={{ scale: 0.95 }}
           >
             <i className="fas fa-stop"></i>
-            <span>Stop Listening</span>
+            <span>Stop Recording</span>
           </motion.button>
 
           {isSpeaking && (

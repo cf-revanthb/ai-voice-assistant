@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sambanovaService } from '../services/sambanovaService';
 import { voiceService } from '../services/voiceService';
+import { configService } from '../services/configService';
 import './SettingsModal.css';
 
 const SettingsModal = ({ settings, onUpdateSettings, onClose }) => {
@@ -74,8 +75,9 @@ const SettingsModal = ({ settings, onUpdateSettings, onClose }) => {
   const handleSave = () => {
     const newErrors = {};
     
-    if (!formData.sambanovaApiKey.trim()) {
-      newErrors.sambanovaApiKey = 'SambaNova API key is required';
+    // Only validate if API key is provided but invalid
+    if (formData.sambanovaApiKey && formData.sambanovaApiKey.trim() && formData.sambanovaApiKey.length < 10) {
+      newErrors.sambanovaApiKey = 'API key appears to be too short';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -83,6 +85,7 @@ const SettingsModal = ({ settings, onUpdateSettings, onClose }) => {
       return;
     }
 
+    console.log('Saving settings:', formData);
     onUpdateSettings(formData);
     onClose();
   };

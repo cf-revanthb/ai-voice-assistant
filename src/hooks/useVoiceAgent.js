@@ -14,7 +14,47 @@ export const useVoiceAgent = (settings) => {
   const synthesisRef = useRef(null);
   const isWakeWordListeningRef = useRef(false);
 
-  const wakeWords = useMemo(() => ['hey circle', 'hi circle', 'hello circle'], []);
+  const wakeWords = useMemo(() => ['hey balm', 'hi balm', 'hello balm'], []);
+
+  // Fallback response system for when API is unavailable
+  const getFallbackResponse = useCallback((userInput) => {
+    const input = userInput.toLowerCase();
+    
+    // Greeting responses
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      return 'Hello! I\'m The Balm, your AI voice assistant. I\'m currently running in offline mode, but I\'m still here to help!';
+    }
+    
+    // Availability questions
+    if (input.includes('available') || input.includes('working') || input.includes('function')) {
+      return 'Yes, I\'m available and working! I can hear you clearly. While my advanced AI features need proper API configuration, I can still respond to your questions in basic mode.';
+    }
+    
+    // Help questions
+    if (input.includes('help') || input.includes('what can you do')) {
+      return 'I can help you with basic conversations and respond to your questions. To unlock my full AI capabilities, please configure your API keys in the settings.';
+    }
+    
+    // Status questions
+    if (input.includes('status') || input.includes('how are you')) {
+      return 'I\'m doing well! My voice recognition is working perfectly, and I can hear you clearly. I\'m running in basic mode until the AI services are properly configured.';
+    }
+    
+    // Weather (common question)
+    if (input.includes('weather')) {
+      return 'I\'d love to help with weather information, but I need my AI services to be properly configured for that. Please check your API keys in settings.';
+    }
+    
+    // Time questions
+    if (input.includes('time') || input.includes('what time')) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      return `The current time is ${timeString}. I can help with time-related questions in basic mode!`;
+    }
+    
+    // Default response
+    return `I heard you say "${userInput}". While I'm running in basic mode, I can still have conversations with you. To unlock my full AI capabilities, please configure your API keys in the settings.`;
+  }, []);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -36,29 +76,16 @@ export const useVoiceAgent = (settings) => {
       
       console.log('Speech result:', { fullTranscript, finalTranscript, wakeWordDetected, isWakeWordListening: isWakeWordListeningRef.current });
       
-      // Check for wake word if we're in wake word listening mode
-      if (isWakeWordListeningRef.current && !wakeWordDetected) {
-        if (checkForWakeWord(fullTranscript)) {
-          console.log('Wake word detected!', fullTranscript);
-          setWakeWordDetected(true);
-          isWakeWordListeningRef.current = false;
-          return;
-        }
-      }
-      
-      // Process the user's request after wake word is detected
-      if (wakeWordDetected && finalTranscript) {
-        console.log('Processing user input after wake word:', finalTranscript);
+      // Process any final transcript directly (no wake word required)
+      if (finalTranscript && finalTranscript.trim()) {
+        console.log('Processing user input:', finalTranscript);
         processUserInput(finalTranscript.trim());
-        stopListening();
+        // Don't stop listening - keep continuous recording
+        // stopListening();
       }
     };
 
-    const checkForWakeWord = (transcript) => {
-      return wakeWords.some(wakeWord => 
-        transcript.includes(wakeWord.toLowerCase())
-      );
-    };
+    // Wake word function removed - no longer needed for continuous recording
 
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -86,12 +113,13 @@ export const useVoiceAgent = (settings) => {
         isWakeWordListeningRef.current = false;
         
         // Auto-restart listening if always listening is enabled and not speaking
+        // Add delay to prevent hearing the assistant's own voice
         if (isAlwaysListening && !isSpeaking) {
           setTimeout(() => {
             if (isAlwaysListening && !isSpeaking) {
               startContinuousListening();
             }
-          }, 1000);
+          }, 3000); // Increased delay to avoid hearing assistant's voice
         }
       };
     }
@@ -123,8 +151,9 @@ export const useVoiceAgent = (settings) => {
     try {
       recognitionRef.current.start();
       setIsListening(true);
-      isWakeWordListeningRef.current = true;
+      isWakeWordListeningRef.current = false; // No wake word needed
       setWakeWordDetected(false);
+      console.log('Started continuous listening (no wake word required)');
     } catch (error) {
       console.error('Error starting continuous listening:', error);
       // Retry after a short delay
@@ -154,6 +183,13 @@ export const useVoiceAgent = (settings) => {
     
     try {
       // Check if API key is configured
+      console.log('Current settings:', settings);
+      console.log('API Key value:', settings.sambanovaApiKey);
+      console.log('API Key length:', settings.sambanovaApiKey ? settings.sambanovaApiKey.length : 0);
+      console.log('Environment variables:');
+      console.log('REACT_APP_SAMBANOVA_API_KEY:', process.env.REACT_APP_SAMBANOVA_API_KEY ? 'Set' : 'Not set');
+      console.log('REACT_APP_HUME_API_KEY:', process.env.REACT_APP_HUME_API_KEY ? 'Set' : 'Not set');
+      
       if (!settings.sambanovaApiKey || settings.sambanovaApiKey.trim() === '') {
         throw new Error('SambaNova API key not configured. Please add your API key in settings.');
       }
@@ -186,26 +222,29 @@ export const useVoiceAgent = (settings) => {
     } catch (error) {
       console.error('Error processing request:', error);
       
-      let errorMessage = 'Sorry, I encountered an error processing your request.';
+      // Try to provide a helpful fallback response
+      let responseMessage = getFallbackResponse(userInput);
       
       // Provide specific error messages for common issues
       if (error.message.includes('API key')) {
-        errorMessage = 'Please configure your SambaNova API key in the settings to use Circle.';
+        responseMessage = 'Please configure your SambaNova API key in the settings to use The Balm.';
+      } else if (error.message.includes('404')) {
+        responseMessage = getFallbackResponse(userInput);
       } else if (error.message.includes('Rate limit')) {
-        errorMessage = 'I\'m getting too many requests. Please wait a moment and try again.';
+        responseMessage = 'I\'m getting too many requests. Please wait a moment and try again.';
       } else if (error.message.includes('Network')) {
-        errorMessage = 'I\'m having trouble connecting to the internet. Please check your connection.';
+        responseMessage = 'I\'m having trouble connecting to the internet. Please check your connection.';
       }
       
-      const errorMsg = {
+      const assistantMessage = {
         id: Date.now() + 1,
         type: 'assistant',
-        content: errorMessage,
+        content: responseMessage,
         timestamp: Date.now()
       };
       
-      setMessages(prev => [...prev, errorMsg]);
-      speak(errorMessage, userInput, {
+      setMessages(prev => [...prev, assistantMessage]);
+      speak(responseMessage, userInput, {
         useHumeTTS: settings.useHumeTTS,
         humeApiKey: settings.humeApiKey,
         voiceId: settings.voice
@@ -221,21 +260,51 @@ export const useVoiceAgent = (settings) => {
     
     setIsSpeaking(true);
     
+    // Stop speech recognition while speaking to prevent feedback
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      console.log('Stopped speech recognition while speaking');
+    }
+    
     try {
       // Create conversational response with natural speech patterns
       const conversationalText = voiceService.createConversationalResponse(text, userInput);
       
       await voiceService.speak(conversationalText, {
         context: voiceService.getSpeechContext(text),
-        onStart: () => setIsSpeaking(true),
-        onEnd: () => setIsSpeaking(false),
+        onStart: () => {
+          setIsSpeaking(true);
+          // Ensure speech recognition is stopped when speaking starts
+          if (recognitionRef.current && isListening) {
+            recognitionRef.current.stop();
+          }
+        },
+        onEnd: () => {
+          setIsSpeaking(false);
+          // Restart speech recognition after speaking ends
+          if (isAlwaysListening) {
+            setTimeout(() => {
+              if (isAlwaysListening && !isSpeaking) {
+                startContinuousListening();
+              }
+            }, 2000); // Wait 2 seconds before restarting
+          }
+        },
         interrupt: true
       });
     } catch (error) {
       console.error('Speech synthesis error:', error);
       setIsSpeaking(false);
+      // Restart speech recognition if speaking fails
+      if (isAlwaysListening) {
+        setTimeout(() => {
+          if (isAlwaysListening && !isSpeaking) {
+            startContinuousListening();
+          }
+        }, 1000);
+      }
     }
-  }, [isSpeaking]);
+  }, [isSpeaking, isListening, isAlwaysListening, startContinuousListening]);
 
   const startListening = useCallback(() => {
     setIsAlwaysListening(true);

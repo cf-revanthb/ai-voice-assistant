@@ -123,7 +123,7 @@ const ConversationPanel = ({ messages, onClearMessages, onAnalyzeRecordings }) =
                     {message.type === 'assistant' && (
                       <span className="message-type">
                         <i className="fas fa-robot"></i>
-                        Circle AI
+                        The Balm
                       </span>
                     )}
                     {message.type === 'user' && (
@@ -175,7 +175,7 @@ const ConversationPanel = ({ messages, onClearMessages, onAnalyzeRecordings }) =
       <div className="conversation-footer">
         <div className="status-indicator">
           <div className="status-dot"></div>
-          <span>Circle AI is ready</span>
+          <span>The Balm is ready</span>
         </div>
       </div>
     </motion.div>

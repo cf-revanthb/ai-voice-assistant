@@ -24,7 +24,7 @@ const Header = ({ onSettingsClick, onAnalysisClick }) => {
             <i className="fas fa-circle"></i>
           </motion.div>
           <div className="logo-text">
-            <h1 className="title">Circle AI</h1>
+            <h1 className="title">The Balm</h1>
             <p className="subtitle">Voice Agent</p>
           </div>
         </motion.div>
@@ -60,7 +60,7 @@ const Header = ({ onSettingsClick, onAnalysisClick }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.5 }}
       >
-        <p>Say "Hey Circle" to start a conversation with your AI assistant</p>
+        <p>Click "Start Recording" to begin a conversation with your AI assistant</p>
       </motion.div>
     </motion.header>
   );
