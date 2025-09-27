@@ -55,6 +55,10 @@ class HumeService {
   async testConnection(apiKey) {
     try {
       // In a real implementation, this would test the Hume AI API connection
+      // For now, simulate a successful connection
+      if (!apiKey) {
+        throw new Error('API key is required');
+      }
       return { success: true, message: 'Hume AI connection successful' };
     } catch (error) {
       return { success: false, message: `Hume AI connection failed: ${error.message}` };

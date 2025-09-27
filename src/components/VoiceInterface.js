@@ -16,7 +16,8 @@ const VoiceInterface = ({
   onPauseSpeaking,
   onResumeSpeaking
 }) => {
-  const [audioLevel, setAudioLevel] = useState(0);
+  // Audio level state for future visual feedback
+  // const [audioLevel, setAudioLevel] = useState(0);
   const [statusText, setStatusText] = useState('Ready to listen');
 
   useEffect(() => {

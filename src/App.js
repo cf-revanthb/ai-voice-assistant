@@ -26,8 +26,7 @@ function App() {
     stopSpeaking,
     pauseSpeaking,
     resumeSpeaking,
-    clearMessages,
-    processUserInput
+    clearMessages
   } = useVoiceAgent(settings);
 
   useEffect(() => {
